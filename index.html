@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jesu Joel George | Engineer</title>
+<meta name="description" content="Jesu Joel George. I build AI systems, I'm one of the core developers of PracticePot, and I have two published patents." />
+<meta name="theme-color" content="#02060a" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%2302060a'/><text x='4' y='23' font-family='monospace' font-size='17' font-weight='700' fill='%237dd3fc'>J_</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300..700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css?v=11" />
+</head>
+<body class="is-booting">
+
+<!-- ░░ BOOT SEQUENCE ░░ -->
+<div class="boot" id="boot" aria-hidden="true">
+  <pre class="boot__log" id="bootLog"></pre>
+  <div class="boot__bar"><span id="bootBar"></span></div>
+  <div class="boot__pct" id="bootPct">000</div>
+  <button class="boot__skip" id="bootSkip">skip ⏎</button>
+</div>
+
+<div class="grain" aria-hidden="true"></div>
+<canvas class="field" id="field" aria-hidden="true"></canvas>
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span><span class="cursor__label" id="cursorLabel"></span></div>
+<aside class="depth" aria-hidden="true">
+  <div class="depth__label mono">depth</div>
+  <div class="depth__rule"><span id="depthFill"></span></div>
+  <div class="depth__read mono"><b id="depthM">00000</b><i>m</i></div>
+  <div class="depth__zone mono" id="depthZone">surface</div>
+</aside>
+<div class="progress" aria-hidden="true"><span id="progress"></span></div>
+
+<!-- ░░ NAV ░░ -->
+<header class="nav">
+  <a href="#top" class="nav__logo" data-magnetic><span class="blink">▍</span>jesu<span class="dim">.devs</span></a>
+  <nav class="nav__links">
+    <a href="#flagship" data-scramble>01 practicepot</a>
+    <a href="#work" data-scramble>02 work</a>
+    <a href="#terminal" data-scramble>03 shell</a>
+    <a href="#contact" data-scramble>04 contact</a>
+  </nav>
+  <div class="nav__status"><span class="pulse"></span><span id="clock">--:--:--</span> IST</div>
+</header>
+
+<main id="top">
+
+<!-- ░░ HERO ░░ -->
+<section class="hero" id="hero">
+  <div class="hero__meta mono">
+    <span>[ SUBJECT_ID: 0x4A4A47 ]</span>
+    <span>KERALA, IN · 10.85°N 76.27°E · SEA LEVEL</span>
+    <span class="accent">STATUS: SHIPPING_TO_PROD</span>
+  </div>
+
+
+  <div class="hero__left">
+    <p class="hero__hello mono"><span class="accent">&gt;</span> hello world, I'm</p>
+    <h1 class="hero__name" aria-label="Jesu Joel George">
+      <span class="line"><span class="word" data-split>JESU</span></span>
+      <span class="line"><span class="word" data-split>JOEL</span></span>
+      <span class="line"><span class="word" data-split>GEORGE</span></span>
+    </h1>
+    <div class="hero__intro">
+      <p class="hero__lede reveal-up">
+        I build <em>intelligent systems</em> from scratch. The models, the pipelines,
+        and all the plumbing underneath. I like hard problems, clean code, and software
+        that keeps working <em>long after the demo is over.</em>
+      </p>
+      <div class="hero__ctas reveal-up">
+        <a href="#work" class="btn btn--solid" data-magnetic><span>view the work</span><i>↘</i></a>
+        <a href="#terminal" class="btn" data-magnetic><span>open a shell</span><i>&gt;_</i></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__portrait" id="portrait">
+    <img src="assets/jesu-suit.webp" alt="Jesu Joel George" width="1039" height="1232" fetchpriority="high" decoding="async" />
+    <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+  </div>
+
+
+  <div class="hero__scroll mono"><span>scroll</span><i></i></div>
+</section>
+
+<!-- ░░ MARQUEE ░░ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>PYTHON</span><b>✦</b><span>TYPESCRIPT</span><b>✦</b><span>NEXT.JS</span><b>✦</b><span>DJANGO</span><b>✦</b><span>LLAMA 3.2 FINE-TUNING</span><b>✦</b><span>PYTORCH</span><b>✦</b><span>AWS CERTIFIED</span><b>✦</b><span>AZURE AI</span><b>✦</b><span>FASTAPI</span><b>✦</b><span>vLLM</span><b>✦</b><span>FASTER-WHISPER</span><b>✦</b><span>INDICTRANS2</span><b>✦</b><span>MCP</span><b>✦</b><span>LANGGRAPH</span><b>✦</b><span>POSTGRES</span><b>✦</b><span>MYSQL</span><b>✦</b><span>SUPABASE</span><b>✦</b><span>DOCKER</span><b>✦</b><span>VERCEL</span><b>✦</b>
+  </div>
+</div>
+
+<!-- ░░ MANIFESTO ░░ -->
+<section class="manifesto" id="about">
+  <div class="sect-label mono"><span>00</span> // whoami</div>
+  <div class="manifesto__grid">
+    <p class="manifesto__text" id="manifesto">
+      I care about every layer of what I build, from the data and the models to the
+      last pixel on the screen. I like turning rough ideas into products people actually
+      rely on, and nothing feels finished to me until it runs smoothly in the real world.
+    </p>
+    <figure class="offline">
+      <div class="offline__img"><img src="assets/offline.webp" width="825" height="1100" decoding="async" alt="Jesu Joel George in a mundu and linen shirt among bamboo" loading="lazy" /></div>
+      <figcaption class="mono"><span class="accent">●</span> offline_mode.jpg (yes, I do go outside)</figcaption>
+    </figure>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b data-count="2">0</b><span>patents published: Scorely &amp; Quantum-Inspired IDS</span></div>
+    <div class="stat"><b data-count="9">0</b><span>projects built, from fintech to agritech to security</span></div>
+    <div class="stat"><b data-count="39">0</b><span>+ plant diseases LeafGuard can spot from a photo</span></div>
+    <div class="stat"><b data-count="2">0</b><span>Indian languages FinEcho transcribes in native script</span></div>
+  </div>
+</section>
+
+<!-- ░░ FLAGSHIP: PRACTICEPOT ░░ -->
+<section class="flagship" id="flagship">
+  <div class="flagship__pin">
+    <div class="sect-label mono"><span>01</span> // flagship · pid 0001</div>
+    <div class="flagship__head">
+      <h2 class="flagship__title"><span class="pp-p">Practice</span><span class="pp-pot">Pot</span></h2>
+      <div class="flagship__badge mono"><span class="pulse"></span> CORE DEVELOPER</div>
+    </div>
+
+    <div class="flagship__body">
+      <div class="flagship__copy">
+        <p class="big">A <em>simulated universe</em> where finance students do the real job before they get the real job.</p>
+        <p>PracticePot is a SaaS company building a simulated learning platform for accounting and finance. Learners work through live-style projects, mock statutory portals, banking test drills and 100+ real case studies, so filing, reconciling and submitting feels like day one at an actual firm.</p>
+        <p>I'm <b>one of the core developers behind the product</b>. My job is making those simulations feel as close to the real thing as possible.</p>
+        <div class="chips mono"><span>simulation engine</span><span>mock gov portals</span><span>case-study runtime</span><span>learner analytics</span></div>
+        <a href="https://practicepot.com/" target="_blank" rel="noopener" class="btn btn--solid" data-magnetic><span>practicepot.com</span><i>↗</i></a>
+      </div>
+
+      <div class="browser" id="ppBrowser" data-cursor="simulate">
+        <div class="browser__bar"><i></i><i></i><i></i><span class="mono">practicepot.com/sim/session</span></div>
+        <div class="browser__body">
+          <div class="sim-row mono"><span class="k">module</span><span class="v" data-type="Statutory Returns"></span></div>
+          <div class="sim-row mono"><span class="k">portal</span><span class="v" data-type="EPFO · member registration (mock)"></span></div>
+          <div class="sim-row mono"><span class="k">case</span><span class="v" data-type="#047 · Payroll reconciliation, Q2"></span></div>
+          <div class="sim-ledger">
+            <div class="led"><span>Opening balance</span><span data-num="248000">0</span></div>
+            <div class="led"><span>Employer PF @12%</span><span data-num="29760">0</span></div>
+            <div class="led"><span>Employee PF @12%</span><span data-num="29760">0</span></div>
+            <div class="led led--total"><span>Challan payable</span><span data-num="59520">0</span></div>
+          </div>
+          <div class="sim-ok mono"><span>✓</span> submission validated, just like the real portal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ WORK ░░ -->
+<section class="work" id="work">
+
+  <div class="work__rail" id="rail">
+    <div class="work__track" id="track">
+      <div class="work__intro">
+        <div class="sect-label mono"><span>02</span> // ~/projects</div>
+        <h2 class="sect-title">Selected <span class="serif">systems</span></h2>
+        <p class="mono dim cmd">$ ls -la ~/projects --all-accounts <span class="blink">▍</span></p>
+      </div>
+
+      <article class="card" data-tilt>
+        <div class="card__top mono"><span>02</span><span class="tag">voice ai · edtech</span></div>
+        <h3>Fiana</h3>
+        <p class="card__one">An AI interviewer that talks, listens, and <em>tells you the truth.</em></p>
+        <div class="pipe mono"><span>cv</span><i>→</i><span>track</span><i>→</i><span>voice call</span><i>→</i><span>scoring</span><i>→</i><span>report</span></div>
+        <p class="card__desc">I built fully spoken mock interviews for Finprov students, presented as a live video call. The AI asks out loud, the mic closes when you stop talking, face analysis runs in-browser, and the report gives criterion-by-criterion evidence plus a stronger example answer. LLM and speech-to-text switch between self-hosted and hosted APIs with one config change.</p>
+        <div class="chips mono"><span>next.js 15</span><span>prisma</span><span>faster-whisper</span><span>piper tts</span><span>ollama</span></div>
+        <div class="card__links mono"><span class="lock">🔒 private repo</span><a href="mailto:jesujoelgeorge@gmail.com?subject=Fiana%20demo">request demo ↗</a></div>
+      </article>
+
+      <article class="card" data-tilt>
+        <div class="card__top mono"><span>03</span><span class="tag">ai · speech · ml-ops</span></div>
+        <h3>FinEcho</h3>
+        <p class="card__one">Self-hosted call intelligence. Every sales call gets heard, translated and scored.</p>
+        <div class="pipe mono"><span>phone</span><i>→</i><span>drive</span><i>→</i><span>whisper</span><i>→</i><span>indictrans2</span><i>→</i><span>llama-3.2 ft</span><i>→</i><span>crm</span></div>
+        <p class="card__desc">I built this one end to end. Recordings travel from counsellors' phones to an ML server through an Android uploader. faster-whisper transcribes them, IndicTrans2 translates them, and a fine-tuned Llama 3.2 3B on vLLM summarises and scores every call on a 0 to 10 rubric before pushing it to the CRM. It handles Malayalam and Kannada in their own scripts and even writes "say this instead" coaching notes.</p>
+        <div class="chips mono"><span>python</span><span>vllm</span><span>faster-whisper</span><span>mysql</span><span>android</span></div>
+        <div class="card__links mono"><span class="lock">🔒 private repo</span><a href="https://github.com/jesu-devs" target="_blank" rel="noopener">jesu-devs ↗</a></div>
+      </article>
+
+      <article class="card card--patent" data-tilt>
+        <div class="patent mono">◆ PATENT PUBLISHED</div>
+        <div class="card__top mono"><span>04</span><span class="tag">ip · invention</span></div>
+        <h3>Scorely</h3>
+        <p class="card__one">AI that <em>evaluates and scores</em>, with a published patent behind it.</p>
+        <div class="pipe mono"><span>submission</span><i>→</i><span>ai evaluation</span><i>→</i><span>score</span><i>→</i><span>feedback</span></div>
+        <p class="card__desc">I built the AI evaluation backend behind Scorely, and the method is published as a patent. Happy to walk you through the architecture and the claims.</p>
+        <div class="chips mono"><span>aieval-backend</span><span>ai evaluation</span><span>patent published</span></div>
+        <div class="card__links mono"><span class="lock">◆ patent published</span><a href="mailto:jesujoelgeorge@gmail.com?subject=Scorely">ask me ↗</a></div>
+      </article>
+
+      <article class="card card--patent" data-tilt>
+        <div class="patent mono">◆ PATENT PUBLISHED</div>
+        <div class="card__top mono"><span>05</span><span class="tag">security · ml · quantum-inspired</span></div>
+        <h3 class="h3--long">Quantum&#8209;Inspired<br>IDS</h3>
+        <p class="card__one">An intrusion detector with a <em>memory</em>. It remembers who keeps knocking.</p>
+        <div class="pipe mono"><span>traffic</span><i>→</i><span>features</span><i>→</i><span>random forest</span><i>→</i><span>q-risk engine</span><i>→</i><span>threat memory</span></div>
+        <p class="card__desc">Real-time network threat monitoring with a twist. A Random Forest gives the baseline, a quantum-inspired risk engine adjusts risk based on behaviour entropy, and a per-IP threat memory catches slow attackers even when every single packet looks harmless. Comes with a live dashboard. Built on work by Steve Mathew.</p>
+        <div class="chips mono"><span>python</span><span>scikit-learn</span><span>ids</span><span>live dashboard</span></div>
+        <div class="card__links mono"><span class="lock">◆ patent published</span><a href="https://github.com/jessuiii/ai-threat-monitoring" target="_blank" rel="noopener">source ↗</a></div>
+      </article>
+
+      <article class="card" data-tilt>
+        <div class="card__top mono"><span>06</span><span class="tag">ai · health · full-stack</span></div>
+        <h3>Ascend</h3>
+        <p class="card__one">A fitness tracker with an AI coach that actually knows your lifts.</p>
+        <div class="pipe mono"><span>onboard</span><i>→</i><span>schedule</span><i>→</i><span>log sets</span><i>→</i><span>1RM tiers</span><i>→</i><span>ai coach</span></div>
+        <p class="card__desc">I built split scheduling, live set logging, estimated 1RMs and strength tiers you unlock as you get stronger, plus an AI coach you can chat with. Full auth, onboarding and analytics. It's live on Vercel.</p>
+        <div class="chips mono"><span>next.js 15</span><span>typescript</span><span>supabase</span><span>groq</span></div>
+        <div class="card__links mono"><a href="https://ascend-fitness-tracker.vercel.app" target="_blank" rel="noopener">live ↗</a><a href="https://github.com/jessuiii/ascend-fitness-tracker" target="_blank" rel="noopener">source ↗</a></div>
+      </article>
+
+      <article class="card" data-tilt>
+        <div class="card__top mono"><span>07</span><span class="tag">collab · saas</span></div>
+        <h3>Ethara</h3>
+        <p class="card__one">Trello-meets-Asana team task manager, built from the database up.</p>
+        <div class="pipe mono"><span>jwt auth</span><i>→</i><span>rbac</span><i>→</i><span>projects</span><i>→</i><span>kanban</span><i>→</i><span>insights</span></div>
+        <p class="card__desc">I built role-based access, project membership, drag-and-drop Kanban, overdue tracking and a dashboard with completion analytics. FastAPI + PostgreSQL behind a React front end, deployed on Render.</p>
+        <div class="chips mono"><span>react</span><span>fastapi</span><span>postgres</span><span>sqlalchemy</span></div>
+        <div class="card__links mono"><a href="https://ethara-assignment-zng8.onrender.com" target="_blank" rel="noopener">live ↗</a><a href="https://github.com/jessuiii/ethara-assignment" target="_blank" rel="noopener">source ↗</a></div>
+      </article>
+
+      <article class="card" data-tilt>
+        <div class="card__top mono"><span>08</span><span class="tag">computer vision · agritech</span></div>
+        <h3>LeafGuard</h3>
+        <p class="card__one">Point a camera at a leaf. Get a diagnosis.</p>
+        <div class="pipe mono"><span>camera</span><i>→</i><span>fastapi</span><i>→</i><span>cnn</span><i>→</i><span>diagnosis</span><i>→</i><span>3d glb</span></div>
+        <p class="card__desc">I built plant disease detection for 39+ diseases across 14+ plant types, with treatment tips and optional 3D visualisation. I also benchmarked a bunch of CNN backbones, and the best one hit 99.76% on the tomato subset.</p>
+        <div class="chips mono"><span>pytorch</span><span>fastapi</span><span>react</span><span>azure blob</span></div>
+        <div class="card__links mono"><span class="lock">ml + full-stack</span><a href="https://github.com/jessuiii/leafguard" target="_blank" rel="noopener">source ↗</a></div>
+      </article>
+
+      <article class="card" data-tilt>
+        <div class="card__top mono"><span>09</span><span class="tag">voice agents · automation</span></div>
+        <h3>Clara</h3>
+        <p class="card__one">Turns sales calls into voice agents you can actually deploy, with versioning built in.</p>
+        <div class="pipe mono"><span>demo call</span><i>→</i><span>extract</span><i>→</i><span>memo v1</span><i>→</i><span>onboarding</span><i>→</i><span>agent v2</span></div>
+        <p class="card__desc">I built a zero-cost, local pipeline: demo-call transcripts become Retell AI agent specs; onboarding calls deep-merge updates into v2 with an auto-generated changelog and a dashboard to review it all.</p>
+        <div class="chips mono"><span>python</span><span>groq</span><span>n8n</span><span>docker</span></div>
+        <div class="card__links mono"><span class="lock">llm pipeline</span><a href="https://github.com/jessuiii/clara-ai-pipelinie" target="_blank" rel="noopener">source ↗</a></div>
+      </article>
+
+      <article class="card card--cta">
+        <div class="card__top mono"><span>∞</span><span class="tag">git log --all</span></div>
+        <h3>There's<br><span class="serif">more in the repo.</span></h3>
+        <p class="card__one">Two GitHub accounts. One very busy commit graph. Come dig.</p>
+        <div class="cta-btns">
+          <a href="https://github.com/jessuiii" target="_blank" rel="noopener" class="btn btn--solid" data-magnetic><span>github/jessuiii</span><i>↗</i></a>
+          <a href="https://github.com/jesu-devs" target="_blank" rel="noopener" class="btn btn--solid" data-magnetic><span>github/jesu-devs</span><i>↗</i></a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ░░ CREDENTIALS ░░ -->
+<section class="certs" id="certs">
+  <div class="sect-label mono"><span>//</span> credentials · verified</div>
+  <h2 class="sect-title">Certified <span class="serif">cloud &amp; AI</span></h2>
+  <div class="certs__grid">
+    <a class="cert" href="https://cp.certmetrics.com/amazon/en/public/verify/credential/75749af5ba634e5fb3ed65b2deeda171" target="_blank" rel="noopener" data-cursor="verify">
+      <div class="cert__holo"></div>
+      <div class="cert__top mono"><span>ISSUER · AMAZON WEB SERVICES</span><span class="cert__code">SAA-C03</span></div>
+      <div class="cert__mark">AWS</div>
+      <h3>Solutions Architect<br><span class="serif">Associate</span></h3>
+      <p>Designing resilient, high-performing, secure and cost-optimised architectures on AWS.</p>
+      <div class="cert__foot mono"><span><i class="pulse"></i> credential verified</span><span>verify ↗</span></div>
+    </a>
+    <a class="cert" href="https://learn.microsoft.com/en-us/users/JesuJoelGeorge-8819/credentials/A74CD284F980DD52" target="_blank" rel="noopener" data-cursor="verify">
+      <div class="cert__holo"></div>
+      <div class="cert__top mono"><span>ISSUER · MICROSOFT</span><span class="cert__code">AI-103</span></div>
+      <div class="cert__mark">AZURE</div>
+      <h3>AI Apps &amp; Agents<br><span class="serif">Developer Associate</span></h3>
+      <p>Building, deploying and operating AI applications and agentic solutions on Azure.</p>
+      <div class="cert__foot mono"><span><i class="pulse"></i> credential verified</span><span>verify ↗</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- ░░ MOMENT: TCS ░░ -->
+<section class="moment" id="moment">
+  <div class="sect-label mono"><span>// </span> log entry · rooms worth being in</div>
+  <div class="moment__grid">
+    <figure class="moment__img">
+      <img src="assets/tcs.webp" width="1179" height="1018" decoding="async" alt="Jesu Joel George at Finprov Learning with Arun Vijayakumar and Dinesh P Thampi of TCS" loading="lazy" />
+      <a class="tagbox tagbox--l" href="https://www.linkedin.com/in/arun-vijayakumar-b2061312/" target="_blank" rel="noopener" aria-label="Arun Vijayakumar on LinkedIn"><i></i><div><b>Arun Vijayakumar <em class="li">in ↗</em></b><span>Technology Head, Europe · TCS</span></div></a>
+      <a class="tagbox tagbox--c" href="https://www.linkedin.com/in/jesu-joel-george/" target="_blank" rel="noopener" aria-label="Jesu Joel George on LinkedIn"><i></i><div><b>Jesu Joel George <em class="li">in ↗</em></b><span>intern · Finprov Learning</span></div></a>
+      <a class="tagbox tagbox--r" href="https://www.linkedin.com/in/dineshthampi/" target="_blank" rel="noopener" aria-label="Dinesh P Thampi on LinkedIn"><i></i><div><b>Dinesh P Thampi <em class="li">in ↗</em></b><span>VP &amp; Delivery Centre Head</span><span>TCS Kerala</span><span>Advisory Board, Finprov</span></div></a>
+    </figure>
+    <div class="moment__copy">
+      <h2 class="sect-title">When <span class="serif">TCS leadership</span> came to see our work</h2>
+      <p>During my internship at <b>Finprov Learning</b>, <a class="person" href="https://www.linkedin.com/in/arun-vijayakumar-b2061312/" target="_blank" rel="noopener">Arun Vijayakumar</a>, Technology Head for Europe at Tata Consultancy Services, came by to see the projects we've been building.</p>
+      <p>With him was <a class="person" href="https://www.linkedin.com/in/dineshthampi/" target="_blank" rel="noopener">Dinesh P Thampi</a>, Vice President &amp; Delivery Centre Head of TCS Kerala, who also sits on Finprov Learning's advisory board.</p>
+      <p class="dim">Still an intern, and I already got to demo my work to people who run enterprise tech at scale.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ░░ TERMINAL ░░ -->
+<section class="term-sect" id="terminal">
+  <div class="sect-label mono"><span>03</span> // interactive shell</div>
+  <h2 class="sect-title">Talk to the <span class="serif">machine</span></h2>
+  <div class="term" id="term">
+    <div class="term__bar"><i></i><i></i><i></i><span class="mono">guest@jesu: ~</span></div>
+    <div class="term__out mono" id="termOut"></div>
+    <label class="term__in mono"><span class="prompt">guest@jesu:~$</span><input id="termIn" autocomplete="off" spellcheck="false" aria-label="terminal input" /></label>
+  </div>
+  <p class="mono dim hint">try <button data-cmd="help">help</button> <button data-cmd="whoami">whoami</button> <button data-cmd="practicepot">practicepot</button> <button data-cmd="sudo hire jesu">sudo hire jesu</button></p>
+</section>
+
+<!-- ░░ CONTACT ░░ -->
+<section class="contact" id="contact">
+  <div class="sect-label mono"><span>04</span> // handshake</div>
+  <a class="contact__big" href="mailto:jesujoelgeorge@gmail.com" data-cursor="say hi">
+    <span class="row"><span>LET'S</span></span>
+    <span class="row"><span class="serif">build</span><span>&nbsp;IT.</span></span>
+  </a>
+  <div class="contact__links mono">
+    <a href="mailto:jesujoelgeorge@gmail.com" data-magnetic>jesujoelgeorge@gmail.com</a>
+    <a href="https://www.linkedin.com/in/jesu-joel-george/" target="_blank" rel="noopener" data-magnetic>linkedin/jesu-joel-george ↗</a>
+    <a href="https://github.com/jessuiii" target="_blank" rel="noopener" data-magnetic>github/jessuiii ↗</a>
+    <a href="https://github.com/jesu-devs" target="_blank" rel="noopener" data-magnetic>github/jesu-devs ↗</a>
+    <a href="https://practicepot.com/" target="_blank" rel="noopener" data-magnetic>practicepot ↗</a>
+  </div>
+  <footer class="foot mono">
+    <span>© 2026 Jesu Joel George · <a href="https://www.linkedin.com/in/jesu-joel-george/" target="_blank" rel="noopener">LinkedIn</a></span>
+    <span>jesu was here · built by vibing with Claude Code</span>
+    <span id="uptime">uptime 00:00:00</span>
+  </footer>
+</section>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="main.js?v=11"></script>
+</body>
+</html>
