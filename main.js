@@ -492,16 +492,18 @@ void main(){
     const esc = (s) => s.replace(/[&<>]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[m]));
     const print = (html, cls = "") => { const d = document.createElement("div"); if (cls) d.className = cls; d.innerHTML = html; out.appendChild(d); out.scrollTop = out.scrollHeight; };
     const btn = (cmd, label = cmd) => `<button class="run" data-cmd="${cmd}">${label}</button>`;
-    const NEOFETCH = `<span class="c">     ██╗     ██╗ ██████╗ </span>  <span class="u">guest</span>@<span class="c">jesu</span>
-<span class="c">     ██║     ██║██╔════╝ </span>  ─────────────────────────
-<span class="c">     ██║     ██║██║  ███╗</span>  <span class="c">name</span>     Jesu Joel George
-<span class="c">██   ██║██   ██║██║   ██║</span>  <span class="c">role</span>     AI &amp; systems engineer
-<span class="c">╚█████╔╝╚█████╔╝╚██████╔╝</span>  <span class="c">flagship</span> PracticePot (core dev)
-<span class="c"> ╚════╝  ╚════╝  ╚═════╝ </span>  <span class="c">base</span>     Kerala, India
-                           <span class="c">shell</span>    curiosity 5.2
-                           <span class="c">uptime</span>   always shipping
-                           <span class="c">patents</span>  2 published
-                           <span class="c">certs</span>    AWS SAA-C03 · Azure AI-103
+    const NEOFETCH = `<span class="c">     ██╗███████╗███████╗██╗   ██╗</span>  <span class="u">guest</span>@<span class="c">jesu</span>
+<span class="c">     ██║██╔════╝██╔════╝██║   ██║</span>  ─────────────────────────
+<span class="c">     ██║█████╗  ███████╗██║   ██║</span>  <span class="c">name</span>     Jesu Joel George
+<span class="c">██   ██║██╔══╝  ╚════██║██║   ██║</span>  <span class="c">role</span>     AI &amp; systems engineer
+<span class="c">╚█████╔╝███████╗███████║╚██████╔╝</span>  <span class="c">flagship</span> PracticePot (core dev)
+<span class="c"> ╚════╝ ╚══════╝╚══════╝ ╚═════╝ </span>  <span class="c">base</span>     Kerala, India
+<span class="d">██████╗ ███████╗██╗   ██╗███████╗</span>  <span class="c">shell</span>    curiosity 5.2
+<span class="d">██╔══██╗██╔════╝██║   ██║██╔════╝</span>  <span class="c">uptime</span>   always shipping
+<span class="d">██║  ██║█████╗  ██║   ██║███████╗</span>  <span class="c">patents</span>  2 published
+<span class="d">██║  ██║██╔══╝  ╚██╗ ██╔╝╚════██║</span>  <span class="c">certs</span>    AWS SAA-C03 · Azure AI-103
+<span class="d">██████╔╝███████╗ ╚████╔╝ ███████║</span>
+<span class="d">╚═════╝ ╚══════╝  ╚═══╝  ╚══════╝</span>
 <span class="d">tap a question above, or type one like</span> ${btn("what has he built?")}`;
     const NEOFETCH_M = `<span class="c">guest</span>@<span class="c">jesu</span>
 ──────────────────────
