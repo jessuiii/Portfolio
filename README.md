@@ -18,6 +18,11 @@ and somewhere along the way you'll find everything I've built.
 ![GSAP](https://img.shields.io/badge/GSAP-0b1a24?style=for-the-badge&logo=greensock&logoColor=7dd3fc)
 ![No framework](https://img.shields.io/badge/framework-none-0b1a24?style=for-the-badge&labelColor=0b1a24&color=7dd3fc)
 
+<a href="https://jesu-devs.vercel.app"><img src="https://img.shields.io/badge/View%20live-jesu--devs.vercel.app-7dd3fc?style=for-the-badge&labelColor=03202e" alt="View live" height="40" /></a>
+
+<br /><br />
+
+[**Live site**](https://jesu-devs.vercel.app) &nbsp;·&nbsp;
 [**LinkedIn**](https://www.linkedin.com/in/jesu-joel-george/) &nbsp;·&nbsp;
 [**Email**](mailto:jesujoelgeorge@gmail.com) &nbsp;·&nbsp;
 [**PracticePot**](https://practicepot.com/) &nbsp;·&nbsp;
@@ -95,7 +100,7 @@ cd Portfolio
 python3 -m http.server 5173
 ```
 
-Then open [localhost:5173](http://localhost:5173). Any static host works for deploying it: GitHub Pages, Vercel, Netlify, Cloudflare Pages.
+Then open [localhost:5173](http://localhost:5173). Or skip all that and see it live at **[jesu-devs.vercel.app](https://jesu-devs.vercel.app)**. Any static host works for deploying it: GitHub Pages, Vercel, Netlify, Cloudflare Pages.
 
 <br />
 
