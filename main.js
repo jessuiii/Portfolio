@@ -248,6 +248,31 @@ void main(){
     });
   }
 
+  /* ── seamless ticker ───────────────────────────
+     Two identical groups, each at least a screen wide; the track slides
+     exactly one group (-50%) and restarts on a pixel-identical frame. */
+  const mqTrack = $(".marquee__track");
+  if (mqTrack) {
+    const items = [...mqTrack.children].map((n) => n.cloneNode(true));
+    const buildTicker = () => {
+      const group = document.createElement("div");
+      group.className = "marquee__group";
+      const fill = () => items.forEach((n) => group.appendChild(n.cloneNode(true)));
+      mqTrack.replaceChildren(group);
+      fill();
+      let guard = 0;
+      while (group.scrollWidth < innerWidth * 1.15 && guard++ < 8) fill();
+      mqTrack.appendChild(group.cloneNode(true));
+      const pxPerSec = Q.tier <= 1 ? 40 : 80;
+      mqTrack.style.animationDuration = (group.scrollWidth / pxPerSec).toFixed(1) + "s";
+    };
+    buildTicker();
+    let mqT, mqW = innerWidth;
+    addEventListener("resize", () => { clearTimeout(mqT); mqT = setTimeout(() => { if (Math.abs(innerWidth - mqW) > 40) { mqW = innerWidth; buildTicker(); } }, 200); });
+    if (document.fonts) document.fonts.ready.then(buildTicker);
+    Q.on(buildTicker);
+  }
+
   /* ── pause off-screen ambient animation ───────── */
   const ambient = new IntersectionObserver((ents) => ents.forEach((e) => e.target.classList.toggle("is-off", !e.isIntersecting)), { rootMargin: "100px" });
   $$(".hero, .marquee, .contact, .flagship").forEach((el) => ambient.observe(el));

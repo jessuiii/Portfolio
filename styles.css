@@ -744,3 +744,9 @@ a.tagbox:hover b { color: #fff; }
 /* hero name: headroom while clipped for the intro, fully unclipped afterwards */
 .hero__name .line { padding-top: .1em; margin-top: -.1em; padding-bottom: .08em; margin-bottom: -.08em; }
 .hero__name.is-revealed .line { overflow: visible; }
+
+/* seamless ticker: two identical groups, track moves exactly one group width */
+.marquee__track { gap: 0; animation-name: marq; animation-timing-function: linear; animation-iteration-count: infinite; }
+.marquee__group { display: flex; flex: none; align-items: center; gap: 28px; padding-right: 28px; }
+@keyframes marq { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+html[data-q="1"] .marquee__track { animation-duration: unset; }
