@@ -48,7 +48,7 @@ and somewhere along the way you'll find everything I've built.
 | **Depth gauge** | A little capsule on the right counts metres as you scroll: surface, twilight zone, midnight zone, abyss, hadal zone, and finally 10,935 m at the Challenger Deep. |
 | **PracticePot** | A SaaS simulated learning platform for accounting and finance gets its own section, with a mock browser that types out a live simulation and fills in a ledger. I'm one of the core developers of the product. |
 | **Selected systems** | A sideways scrolling rail of project cards, each with an animated pipeline showing how data actually moves through it. Patented work gets a glowing ribbon. |
-| **Credentials** | AWS Solutions Architect Associate (SAA-C03) and Azure AI Apps and Agents Developer Associate (AI-103), each linked to its official verification page. |
+| **Credentials** | AWS Solutions Architect Associate (SAA-C03) and Azure AI Apps and Agents Developer Associate (AI-103) as real 3D badges built in Three.js: metal rims, clear-coated faces, an engraved back and a ribbon. They float, lean toward your cursor, and you can drag them to spin. Each card links to its official verification page. |
 | **A real terminal** | Type `help`, `projects`, `certs`, `patents`, `linkedin` or, if you're hiring, `sudo hire jesu`. |
 | **Boot sequence** | The page boots like an old BIOS before it lets you in. Press Enter to skip. |
 
