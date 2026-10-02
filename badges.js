@@ -11,9 +11,12 @@ const TAU = Math.PI * 2;
 const hexPts = (r) => Array.from({ length: 6 }, (_, i) => { const a = Math.PI / 2 + (i * TAU) / 6; return [Math.cos(a) * r, Math.sin(a) * r]; });
 
 /* Each badge: its official image (square, transparent outside the badge), the badge outline in
-   badge units, and `span` = how far the image's half-width reaches in those units. */
+   badge units (or a JSON file traced from the image), and `span` = how far the image's half-width reaches in those units. */
 const SPECS = {
   aws: { img: "assets/badge-aws.webp", outline: hexPts(1), round: 0.03, span: 150 / 145.5, edge: "#3c92f9" },
+  // outline and ribbon traced from the official image (assets/badge-azure.json)
+  azure: { img: "assets/badge-azure.webp", data: "assets/badge-azure.json", round: 0.004, edge: "#0b254a",
+    layers: [{ key: "ribbon", lift: 0.05, edge: "#8c8d8a" }] },
 };
 
 // polygon with softly rounded corners
@@ -37,7 +40,8 @@ async function boot() {
 
   const badges = await Promise.all(stages.map(async (stage) => {
     const spec = SPECS[stage.dataset.badge]; if (!spec) return null;
-    const map = await loader.loadAsync(spec.img);
+    const [map, data] = await Promise.all([loader.loadAsync(spec.img), spec.data ? fetch(spec.data).then((r) => r.json()) : null]);
+    if (data) Object.assign(spec, { span: data.span, outline: data.outline, layers: (spec.layers || []).map((l) => ({ ...l, outline: data[l.key] })) });
     const card = stage.closest(".cert");
     const cv = document.createElement("canvas"); cv.className = "cert__gl"; stage.appendChild(cv);
     const renderer = new THREE.WebGLRenderer({ canvas: cv, alpha: true, antialias: Q.tier >= 2, powerPreference: "low-power" });
@@ -52,25 +56,29 @@ async function boot() {
     const key = new THREE.DirectionalLight(0xffffff, 1); key.position.set(-2, 3, 4); scene.add(key);
 
     const pivot = new THREE.Group(), badge = new THREE.Group(); pivot.add(badge); scene.add(pivot);
-    const shape = new THREE.Shape(); trace(shape, spec.outline, spec.round);
-
-    // solid body: the badge's rim colour carried round the edge, with a rounded bevel
-    const D = 0.1, B = 0.025;
-    const bodyGeo = new THREE.ExtrudeGeometry(shape, { depth: D, bevelEnabled: true, bevelThickness: B, bevelSize: B * 0.6, bevelOffset: -B * 0.6, bevelSegments: 5, curveSegments: 10 });
-    const body = new THREE.Mesh(bodyGeo, new THREE.MeshPhysicalMaterial({ color: spec.edge, metalness: 0.55, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.12 }));
-    body.position.z = -D / 2; badge.add(body);
-
-    // faces: the official image, mapped 1:1 and drawn unlit so it matches the original exactly
-    const capGeo = new THREE.ShapeGeometry(shape, 10), p = capGeo.attributes.position, uv = capGeo.attributes.uv;
-    for (let i = 0; i < p.count; i++) uv.setXY(i, (p.getX(i) / spec.span + 1) / 2, (p.getY(i) / spec.span + 1) / 2);
+    const shapeOf = (pts) => { const sh = new THREE.Shape(); trace(sh, pts, spec.round); return sh; };
     const faceMat = new THREE.MeshBasicMaterial({ map, toneMapped: false });
-    const zf = D / 2 + B + 0.001;
-    const front = new THREE.Mesh(capGeo, faceMat); front.position.z = zf; badge.add(front);
-    const back = new THREE.Mesh(capGeo, faceMat); back.rotation.y = Math.PI; back.position.z = -zf; badge.add(back);
     // clear-coat: adds only reflections and highlights on top of the artwork, never changes its colours
     const gloss = new THREE.MeshPhysicalMaterial({ color: 0x000000, metalness: 0, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.2, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false });
-    const gf = new THREE.Mesh(capGeo, gloss); gf.position.z = zf + 0.001; badge.add(gf);
-    const gb = new THREE.Mesh(capGeo, gloss); gb.rotation.y = Math.PI; gb.position.z = -zf - 0.001; badge.add(gb);
+    const B = 0.025;
+    // one solid slab: extruded outline with a rounded bevel in the badge's edge colour, and the
+    // official image on both faces (mapped 1:1, unlit, so it matches the original exactly)
+    const slab = (pts, z0, depth, edge) => {
+      const sh = shapeOf(pts);
+      const body = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth, bevelEnabled: true, bevelThickness: B, bevelSize: B * 0.6, bevelOffset: -B * 0.6, bevelSegments: 5, curveSegments: 10 }),
+        new THREE.MeshPhysicalMaterial({ color: edge, metalness: 0.55, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.12 }));
+      body.position.z = z0; badge.add(body);
+      const cap = new THREE.ShapeGeometry(sh, 10), p = cap.attributes.position, uv = cap.attributes.uv;
+      for (let i = 0; i < p.count; i++) uv.setXY(i, (p.getX(i) / spec.span + 1) / 2, (p.getY(i) / spec.span + 1) / 2);
+      const zf = z0 + depth + B + 0.001, zb = -zf;
+      [[faceMat, zf, 0], [faceMat, zb, Math.PI], [gloss, zf + 0.001, 0], [gloss, zb - 0.001, Math.PI]].forEach(([m, z, ry]) => {
+        const mesh = new THREE.Mesh(cap, m); mesh.position.z = z; mesh.rotation.y = ry; badge.add(mesh);
+      });
+    };
+    const D = 0.1;
+    slab(spec.outline, -D / 2, D, spec.edge);
+    // raised layers (e.g. the Azure ribbon) stand proud of the face on both sides
+    (spec.layers || []).forEach((l) => slab(l.outline, -D / 2 - l.lift, D + 2 * l.lift, l.edge));
 
     return { stage, card, cv, renderer, scene, camera, pivot, badge, torch,
       visible: false, entered: false, spin: -TAU, spinTarget: -TAU, vel: 0, drag: null, moved: 0,
