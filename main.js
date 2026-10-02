@@ -491,6 +491,7 @@ void main(){
     const hist = []; let hp = 0;
     const esc = (s) => s.replace(/[&<>]/g, (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[m]));
     const print = (html, cls = "") => { const d = document.createElement("div"); if (cls) d.className = cls; d.innerHTML = html; out.appendChild(d); out.scrollTop = out.scrollHeight; };
+    const btn = (cmd, label = cmd) => `<button class="run" data-cmd="${cmd}">${label}</button>`;
     const NEOFETCH = `<span class="c">     ██╗     ██╗ ██████╗ </span>  <span class="u">guest</span>@<span class="c">jesu</span>
 <span class="c">     ██║     ██║██╔════╝ </span>  ─────────────────────────
 <span class="c">     ██║     ██║██║  ███╗</span>  <span class="c">name</span>     Jesu Joel George
@@ -501,7 +502,7 @@ void main(){
                            <span class="c">uptime</span>   always shipping
                            <span class="c">patents</span>  2 published
                            <span class="c">certs</span>    AWS SAA-C03 · Azure AI-103
-<span class="d">type 'help' to see what this machine can do.</span>`;
+<span class="d">tap a question above, or type one like</span> ${btn("what has he built?")}`;
     const NEOFETCH_M = `<span class="c">guest</span>@<span class="c">jesu</span>
 ──────────────────────
 <span class="c">name</span>     Jesu Joel George
@@ -511,7 +512,7 @@ void main(){
 <span class="c">certs</span>    AWS SAA-C03 · Azure AI-103
 <span class="c">base</span>     Kerala, India
 <span class="c">uptime</span>   always shipping
-<span class="d">type 'help' to see what this machine can do.</span>`;
+<span class="d">tap a question above, or type one like</span> ${btn("what has he built?")}`;
     const nf = () => (innerWidth < 640 ? NEOFETCH_M : NEOFETCH);
     const files = {
       "about.txt": "I build AI systems end to end. Data in, models tuned, pipelines deployed, dashboards out.\nWhat I care about most is software people actually trust and use every day.",
@@ -519,20 +520,21 @@ void main(){
       "secrets.env": "<span class='o'>nice try.</span> 🔒",
     };
     const C = {
-      help: () => `<span class="c">available commands</span>
-  whoami        who am i
-  neofetch      system info
-  projects      list the systems
-  practicepot   the flagship
-  stack         tools of the trade
-  ls / cat      poke around the filesystem
-  patents       the inventions
-  certs         professional certifications
-  contact       open a channel
-  github        jump to github
-  linkedin      connect on linkedin
-  sudo hire jesu   <span class="d">(recommended)</span>
-  clear         wipe the screen`,
+      help: () => `<span class="c">available commands</span> <span class="d">(click any of them)</span>
+  ${btn("whoami")}        who am i
+  ${btn("neofetch")}      system info
+  ${btn("projects")}      list the systems
+  ${btn("practicepot")}   the flagship
+  ${btn("stack")}         tools of the trade
+  ${btn("ls")} / cat      poke around the filesystem
+  ${btn("patents")}       the inventions
+  ${btn("certs")}         professional certifications
+  ${btn("contact")}       open a channel
+  ${btn("github")}        jump to github
+  ${btn("linkedin")}      connect on linkedin
+  ${btn("sudo hire jesu")}   <span class="d">(recommended)</span>
+  ${btn("clear")}         wipe the screen
+<span class="d">or just ask in plain english, like "what has he built?"</span>`,
       whoami: () => "I'm Jesu Joel George. AI and systems engineer, intern at Finprov Learning, one of the core developers of PracticePot, and I have two published patents.\nI turn phone calls into insights, spreadsheets into platforms, and coffee into commits.",
       neofetch: () => nf(),
       projects: () => `<span class="c">PID   NAME                  STATUS</span>
@@ -547,7 +549,7 @@ void main(){
 0009  Clara                 <span class="c">● running</span>   <span class="d">calls → voice agents</span>`,
       practicepot: () => files["practicepot.md"],
       stack: () => "<span class='c'>lang</span>   python · typescript · sql · php\n<span class='c'>ai</span>     llama fine-tuning · vllm · faster-whisper · indictrans2 · langgraph · mcp · ollama\n<span class='c'>web</span>    next.js · react · django · tailwind · prisma\n<span class='c'>data</span>   postgres · mysql · sqlite · supabase\n<span class='c'>ops</span>    docker · nginx · gunicorn · github actions · vercel",
-      ls: () => Object.keys(files).map((f) => `<span class="c">${f}</span>`).join("   "),
+      ls: () => Object.keys(files).map((f) => btn(`cat ${f}`, f)).join("   "),
       cat: (a) => files[a] || (a ? `cat: ${esc(a)}: No such file or directory` : "usage: cat &lt;file&gt;"),
       contact: () => "✉  <a href='mailto:jesujoelgeorge@gmail.com'>jesujoelgeorge@gmail.com</a>\nin <a href='https://www.linkedin.com/in/jesu-joel-george/' target='_blank' rel='noopener'>linkedin.com/in/jesu-joel-george</a>\n⌘  <a href='https://github.com/jessuiii' target='_blank' rel='noopener'>github.com/jessuiii</a> · <a href='https://github.com/jesu-devs' target='_blank' rel='noopener'>jesu-devs</a>",
       github: () => "⌘  <a href='https://github.com/jessuiii' target='_blank' rel='noopener'>github.com/jessuiii</a>\n⌘  <a href='https://github.com/jesu-devs' target='_blank' rel='noopener'>github.com/jesu-devs</a>",
@@ -569,6 +571,23 @@ void main(){
       }
       return `guest is not in the sudoers file. <span class='d'>this incident will be reported.</span>`;
     }
+    // plain-english questions → commands, so nobody needs to know the syntax
+    const INTENTS = [
+      [/\b(hire|hiring|job|offer|recruit|availab|internship|open to)/, "sudo hire jesu"],
+      [/practice ?pot/, "practicepot"],
+      [/patent|invent/, "patents"],
+      [/cert|aws|azure|qualif/, "certs"],
+      [/skill|stack|tech|tool|language|framework|know|work with/, "stack"],
+      [/project|built|build|made|make|work|portfolio|app/, "projects"],
+      [/linkedin/, "linkedin"],
+      [/github|code|repo/, "github"],
+      [/contact|email|mail|reach|talk|call|phone|connect|touch/, "contact"],
+      [/who|about|yourself|introduc|background|tell me/, "whoami"],
+      [/^(hi|hey|hello|hola|yo|sup)\b/, "hello"],
+    ];
+    const intent = (q) => (INTENTS.find(([re]) => re.test(q)) || [])[1];
+    const lost = () => `hmm, I didn't catch that. try one of these:
+  ${btn("whoami", "who is jesu?")}   ${btn("projects", "what has he built?")}   ${btn("contact", "get in touch")}   ${btn("help", "show everything")}`;
     function run(raw) {
       const line = raw.trim();
       print(`<span class="c">guest@jesu:~$</span> <span class="u">${esc(line)}</span>`);
@@ -579,7 +598,13 @@ void main(){
       let res;
       if (cmd === "sudo") res = sudo(arg);
       else if (C[cmd.toLowerCase()]) res = C[cmd.toLowerCase()](arg);
-      else res = `command not found: ${esc(cmd)}. try <span class="c">help</span>`;
+      else {
+        const hit = intent(line.toLowerCase().replace(/[?!.,]/g, ""));
+        if (hit === "hello") res = `hey 👋 good to meet you. ${lost().split("\n")[1].trim()}`;
+        else if (hit === "sudo hire jesu") res = sudo("hire jesu");
+        else if (hit) res = C[hit]("");
+        else res = lost();
+      }
       if (res) print(res);
     }
     inp.addEventListener("keydown", (e) => {
@@ -588,8 +613,14 @@ void main(){
       else if (e.key === "ArrowDown") { inp.value = hp < hist.length - 1 ? hist[++hp] : ((hp = hist.length), ""); e.preventDefault(); }
       else if (e.key === "Tab") { e.preventDefault(); const m = Object.keys(C).find((k) => k.startsWith(inp.value)); if (m) inp.value = m; }
     });
-    $("#term").addEventListener("click", (e) => { if (!e.target.closest("a")) inp.focus({ preventScroll: true }); });
-    $$(".hint button").forEach((b) => b.addEventListener("click", () => { run(b.dataset.cmd); inp.focus({ preventScroll: true }); }));
+    const fine = matchMedia("(pointer: fine)").matches;
+    const focus = () => { if (fine) inp.focus({ preventScroll: true }); };
+    $("#term").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-cmd]");
+      if (b) { run(b.dataset.cmd); focus(); }
+      else if (!e.target.closest("a")) inp.focus({ preventScroll: true });
+    });
+    $$(".hint button").forEach((b) => b.addEventListener("click", () => { run(b.dataset.cmd); focus(); }));
     // auto neofetch when visible
     let did = false;
     const io = new IntersectionObserver(([en]) => {

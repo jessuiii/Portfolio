@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300..700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css?v=14" />
+<link rel="stylesheet" href="styles.css?v=15" />
 </head>
 <body class="is-booting">
 
@@ -49,7 +49,7 @@
   <nav class="nav__links">
     <a href="#flagship" data-scramble>01 practicepot</a>
     <a href="#work" data-scramble>02 work</a>
-    <a href="#terminal" data-scramble>03 shell</a>
+    <a href="#terminal" data-scramble>03 ask me</a>
     <a href="#contact" data-scramble>04 contact</a>
   </nav>
   <div class="nav__status"><span class="pulse"></span><span id="clock">--:--:--</span> IST</div>
@@ -81,7 +81,7 @@
       </p>
       <div class="hero__ctas reveal-up">
         <a href="#work" class="btn btn--solid" data-magnetic><span>view the work</span><i>↘</i></a>
-        <a href="#terminal" class="btn" data-magnetic><span>open a shell</span><i>&gt;_</i></a>
+        <a href="#terminal" class="btn" data-magnetic><span>ask me anything</span><i>&gt;_</i></a>
       </div>
     </div>
   </div>
@@ -318,12 +318,22 @@
 <section class="term-sect" id="terminal">
   <div class="sect-label mono"><span>03</span> // interactive shell</div>
   <h2 class="sect-title">Talk to the <span class="serif">machine</span></h2>
+  <p class="term-sub">No coding needed. Tap a question below, or type one in plain English.</p>
+  <div class="mono hint">
+    <button data-cmd="whoami">who is jesu? <i>whoami</i></button>
+    <button data-cmd="projects">what has he built? <i>projects</i></button>
+    <button data-cmd="practicepot">what's practicepot? <i>practicepot</i></button>
+    <button data-cmd="stack">what can he work with? <i>stack</i></button>
+    <button data-cmd="certs">certifications <i>certs</i></button>
+    <button data-cmd="patents">patents <i>patents</i></button>
+    <button data-cmd="contact">get in touch <i>contact</i></button>
+    <button data-cmd="sudo hire jesu" class="hint__hire">hire jesu <i>sudo hire jesu</i></button>
+  </div>
   <div class="term" id="term">
     <div class="term__bar"><i></i><i></i><i></i><span class="mono">guest@jesu: ~</span></div>
     <div class="term__out mono" id="termOut"></div>
     <label class="term__in mono"><span class="prompt">guest@jesu:~$</span><input id="termIn" autocomplete="off" spellcheck="false" aria-label="terminal input" /></label>
   </div>
-  <p class="mono dim hint">try <button data-cmd="help">help</button> <button data-cmd="whoami">whoami</button> <button data-cmd="practicepot">practicepot</button> <button data-cmd="sudo hire jesu">sudo hire jesu</button></p>
 </section>
 
 <!-- ░░ CONTACT ░░ -->
@@ -352,6 +362,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="main.js?v=14"></script>
+<script src="main.js?v=15"></script>
 </body>
 </html>

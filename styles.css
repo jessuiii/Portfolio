@@ -273,8 +273,14 @@ section { position: relative; padding: clamp(90px, 14vh, 160px) var(--gut); }
 .term__in { display: flex; gap: 10px; padding: 14px 18px; border-top: 1px solid var(--line); font-size: 13px; }
 .term__in .prompt { color: var(--acc); flex: none; }
 .term__in input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--ink); font: inherit; caret-color: var(--acc); }
-.hint { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.hint button { border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; font: 11px var(--mono); color: var(--ink); transition: all .2s; }
+.term-sub { margin-top: 22px; max-width: 46ch; color: #b5b5b5; font-size: 18px; }
+.hint { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.hint + .term { margin-top: 24px; }
+.hint button { border: 1px solid var(--line); border-radius: 99px; padding: 8px 14px; font: 13px var(--mono); color: var(--ink); transition: all .2s; }
+.hint button i { font-style: normal; color: var(--dim); margin-left: 6px; font-size: 11px; }
+.hint .hint__hire { border-color: var(--blue); }
+.term__out .run { font: inherit; color: var(--blue); text-decoration: underline dotted; text-underline-offset: 3px; cursor: pointer; padding: 0; }
+.term__out .run:hover { text-decoration-style: solid; }
 .hint button:hover { border-color: var(--acc); color: var(--acc); }
 
 /* ── contact ───────────────────────────────────── */
@@ -750,3 +756,4 @@ a.tagbox:hover b { color: #fff; }
 .marquee__group { display: flex; flex: none; align-items: center; gap: 28px; padding-right: 28px; }
 @keyframes marq { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
 html[data-q="1"] .marquee__track { animation-duration: unset; }
+@media (max-width: 640px) { .hint button i { display: none; } .term-sub { font-size: 16px; } }
