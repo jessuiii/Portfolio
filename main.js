@@ -315,8 +315,10 @@ void main(){
 
   /* ── intro (hero) ──────────────────────────────── */
   function intro(delay) {
-    if (!G || reduce) return;
-    const tl = G.timeline({ delay });
+    // name lines clip only while the letters rise in; after that, let hover lifts poke out freely
+    const unclip = () => $(".hero__name").classList.add("is-revealed");
+    if (!G || reduce) return unclip();
+    const tl = G.timeline({ delay, onComplete: unclip });
     tl.from(".hero__name .ch", { yPercent: 115, rotate: 8, duration: 1.1, ease: "expo.out", stagger: 0.035 })
       .from(".hero__meta span", { opacity: 0, y: -10, duration: 0.6, stagger: 0.08 }, "<0.2")
       .from(".hero__hello", { opacity: 0, x: -20, duration: 0.7 }, "<")

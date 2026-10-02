@@ -20,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300..700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="styles.css?v=11" />
+<link rel="stylesheet" href="styles.css?v=12" />
 </head>
 <body class="is-booting">
 
@@ -178,8 +178,8 @@
         <h3>Fiana</h3>
         <p class="card__one">An AI interviewer that talks, listens, and <em>tells you the truth.</em></p>
         <div class="pipe mono"><span>cv</span><i>→</i><span>track</span><i>→</i><span>voice call</span><i>→</i><span>scoring</span><i>→</i><span>report</span></div>
-        <p class="card__desc">I built fully spoken mock interviews for Finprov students, presented as a live video call. The AI asks out loud, the mic closes when you stop talking, face analysis runs in-browser, and the report gives criterion-by-criterion evidence plus a stronger example answer. LLM and speech-to-text switch between self-hosted and hosted APIs with one config change.</p>
-        <div class="chips mono"><span>next.js 15</span><span>prisma</span><span>faster-whisper</span><span>piper tts</span><span>ollama</span></div>
+        <p class="card__desc">I built fully spoken mock interviews for Finprov students, set up like a live video call. The AI asks out loud, the mic closes when you stop talking, face analysis runs right in the browser, and the report backs every score with evidence plus a stronger example answer. It runs on Groq: gpt-oss 120B and 20B do the thinking, and Whisper large-v3-turbo handles speech.</p>
+        <div class="chips mono"><span>next.js 15</span><span>groq</span><span>gpt-oss</span><span>whisper v3 turbo</span><span>piper tts</span></div>
         <div class="card__links mono"><span class="lock">🔒 private repo</span><a href="mailto:jesujoelgeorge@gmail.com?subject=Fiana%20demo">request demo ↗</a></div>
       </article>
 
@@ -351,6 +351,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="main.js?v=11"></script>
+<script src="main.js?v=12"></script>
 </body>
 </html>

@@ -740,3 +740,7 @@ a.tagbox:hover b { color: #fff; }
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
 .hero__name .ch { padding: 0 .02em; margin: 0 -.02em; }
+
+/* hero name: headroom while clipped for the intro, fully unclipped afterwards */
+.hero__name .line { padding-top: .1em; margin-top: -.1em; padding-bottom: .08em; margin-bottom: -.08em; }
+.hero__name.is-revealed .line { overflow: visible; }
