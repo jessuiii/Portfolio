@@ -465,15 +465,8 @@ void main(){
   }, 520);
 
   // certs
-  G.from(".cert", { y: 80, rotateX: 20, opacity: 0, duration: 1.2, ease: "expo.out", stagger: 0.15, transformPerspective: 1000, scrollTrigger: { trigger: ".certs__grid", start: "top 85%" } });
-  $$(".cert").forEach((c) => {
-    c.addEventListener("pointermove", (e) => {
-      const r = c.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-      c.style.setProperty("--hx", px * 100 + "%"); c.style.setProperty("--hy", py * 100 + "%");
-      if (fine) G.to(c, { rotateY: (px - 0.5) * 14, rotateX: -(py - 0.5) * 14, transformPerspective: 900, duration: 0.4 });
-    });
-    c.addEventListener("pointerleave", () => G.to(c, { rotateX: 0, rotateY: 0, duration: 1, ease: "elastic.out(1,0.4)" }));
-  });
+  G.from(".cert__meta", { y: 40, opacity: 0, duration: 1.2, ease: "expo.out", stagger: 0.15, scrollTrigger: { trigger: ".certs__grid", start: "top 85%" } });
+
 
   // moment
   G.from(".moment__img", { clipPath: "inset(0 100% 0 0)", duration: 1.5, ease: "expo.inOut", scrollTrigger: { trigger: ".moment__img", start: "top 80%" } });

@@ -87,8 +87,8 @@ async function boot() {
     b.camera.aspect = r.width / r.height;
     const halfH = Math.tan((b.camera.fov * Math.PI) / 360) * b.camera.position.z;
     b.halfW = halfH * b.camera.aspect;
-    b.pivot.scale.setScalar(halfH * 0.78 * Math.min(1, b.halfW / 1.15));
-    b.xOff = b.camera.aspect > 1.5 ? b.halfW * 0.38 : 0;
+    b.pivot.scale.setScalar(halfH * 0.8 * Math.min(1, b.halfW / 1.05));
+    b.xOff = 0;
     b.camera.updateProjectionMatrix();
     paint(b, 0);
   };
