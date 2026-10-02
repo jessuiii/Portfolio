@@ -1,9 +1,15 @@
 /* jesu.devs: 3D credential badges.
    The face of each badge is the official badge image, unaltered and unlit (so its colours stay exact).
-   It sits on a solid extruded body cut to the badge's own outline, with a clear-coat gloss layer on top
-   that catches the light as the badge moves. three.js is only fetched when the section gets close. */
+   It sits on a solid extruded body cut to the badge's own outline, with a gloss layer on top that
+   catches the light as the badge moves.
 
-const stages = [...document.querySelectorAll(".cert__stage[data-badge]")];
+   Loading: the official image is in the HTML, so the badge is visible immediately. three.js is
+   fetched once the page is idle, both badges share one WebGL canvas (one context, one environment,
+   shaders compiled once, off the main thread where supported), and the 3D badge fades in over the
+   image when its first frame is ready. */
+
+const grid = document.querySelector(".certs__grid");
+const stages = grid ? [...grid.querySelectorAll(".cert__stage[data-badge]")] : [];
 const Q = window.__jjgQuality || { tier: 3, on() {} };
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const TAU = Math.PI * 2;
@@ -11,7 +17,8 @@ const TAU = Math.PI * 2;
 const hexPts = (r) => Array.from({ length: 6 }, (_, i) => { const a = Math.PI / 2 + (i * TAU) / 6; return [Math.cos(a) * r, Math.sin(a) * r]; });
 
 /* Each badge: its official image (square, transparent outside the badge), the badge outline in
-   badge units (or a JSON file traced from the image), and `span` = how far the image's half-width reaches in those units. */
+   badge units (or a JSON file traced from the image), and `span` = how far the image's half-width
+   reaches in those units. */
 const SPECS = {
   aws: { img: "assets/badge-aws.webp", outline: hexPts(1), round: 0.03, span: 150 / 145.5, edge: "#3c92f9" },
   // outline and ribbon traced from the official image (assets/badge-azure.json)
@@ -35,38 +42,46 @@ function trace(path, pts, r) {
 
 async function boot() {
   const THREE = await import("three");
-  const { RoomEnvironment } = await import("three/addons/environments/RoomEnvironment.js");
-  const loader = new THREE.TextureLoader();
 
+  const cv = document.createElement("canvas"); cv.className = "cert__gl"; cv.setAttribute("aria-hidden", "true"); grid.appendChild(cv);
+  const renderer = new THREE.WebGLRenderer({ canvas: cv, alpha: true, antialias: Q.tier >= 2, powerPreference: "low-power" });
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.autoClear = false; renderer.setClearColor(0x000000, 0);
+  const aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+
+  // a small studio for reflections: dim walls, a soft key panel overhead and a few light strips
+  const env = (() => {
+    const s = new THREE.Scene(), box = new THREE.BoxGeometry(1, 1, 1);
+    const room = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color: 0x1a2a38, side: THREE.BackSide })); room.scale.setScalar(20); s.add(room);
+    const panel = (c, x, y, z, sx, sy, sz) => { const m = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(4) })); m.position.set(x, y, z); m.scale.set(sx, sy, sz); s.add(m); };
+    panel(0xffffff, 0, 9, 2, 10, 0.2, 6); panel(0xbfe9ff, -9, 1, 3, 0.2, 6, 2); panel(0xffffff, 9, 2, 4, 0.2, 4, 2); panel(0x7dd3fc, 0, -3, 9, 6, 2, 0.2);
+    const pm = new THREE.PMREMGenerator(renderer), tex = pm.fromScene(s, 0.04).texture; pm.dispose();
+    return tex;
+  })();
+
+  const loader = new THREE.TextureLoader();
   const badges = await Promise.all(stages.map(async (stage) => {
     const spec = SPECS[stage.dataset.badge]; if (!spec) return null;
     const [map, data] = await Promise.all([loader.loadAsync(spec.img), spec.data ? fetch(spec.data).then((r) => r.json()) : null]);
     if (data) Object.assign(spec, { span: data.span, outline: data.outline, layers: (spec.layers || []).map((l) => ({ ...l, outline: data[l.key] })) });
-    const card = stage.closest(".cert");
-    const cv = document.createElement("canvas"); cv.className = "cert__gl"; stage.appendChild(cv);
-    const renderer = new THREE.WebGLRenderer({ canvas: cv, alpha: true, antialias: Q.tier >= 2, powerPreference: "low-power" });
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = aniso;
 
-    const scene = new THREE.Scene();
-    const pm = new THREE.PMREMGenerator(renderer);
-    scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture; pm.dispose();
+    const scene = new THREE.Scene(); scene.environment = env;
     const camera = new THREE.PerspectiveCamera(28, 1, 0.1, 50); camera.position.set(0, 0, 6.4);
     const torch = new THREE.PointLight(0xa5f3fc, 4, 12, 1.6); torch.position.set(1.5, 1.2, 3); scene.add(torch);
     const key = new THREE.DirectionalLight(0xffffff, 1); key.position.set(-2, 3, 4); scene.add(key);
-
     const pivot = new THREE.Group(), badge = new THREE.Group(); pivot.add(badge); scene.add(pivot);
-    const shapeOf = (pts) => { const sh = new THREE.Shape(); trace(sh, pts, spec.round); return sh; };
+
     const faceMat = new THREE.MeshBasicMaterial({ map, toneMapped: false });
-    // clear-coat: adds only reflections and highlights on top of the artwork, never changes its colours
-    const gloss = new THREE.MeshPhysicalMaterial({ color: 0x000000, metalness: 0, roughness: 0.3, clearcoat: 1, clearcoatRoughness: 0.2, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false });
+    // gloss: adds only reflections and highlights on top of the artwork, never changes its colours
+    const gloss = new THREE.MeshStandardMaterial({ color: 0x000000, metalness: 0, roughness: 0.25, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false });
     const B = 0.025;
     // one solid slab: extruded outline with a rounded bevel in the badge's edge colour, and the
     // official image on both faces (mapped 1:1, unlit, so it matches the original exactly)
     const slab = (pts, z0, depth, edge) => {
-      const sh = shapeOf(pts);
+      const sh = new THREE.Shape(); trace(sh, pts, spec.round);
       const body = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth, bevelEnabled: true, bevelThickness: B, bevelSize: B * 0.6, bevelOffset: -B * 0.6, bevelSegments: 5, curveSegments: 10 }),
-        new THREE.MeshPhysicalMaterial({ color: edge, metalness: 0.55, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.12 }));
+        new THREE.MeshStandardMaterial({ color: edge, metalness: 0.55, roughness: 0.26 }));
       body.position.z = z0; badge.add(body);
       const cap = new THREE.ShapeGeometry(sh, 10), p = cap.attributes.position, uv = cap.attributes.uv;
       for (let i = 0; i < p.count; i++) uv.setXY(i, (p.getX(i) / spec.span + 1) / 2, (p.getY(i) / spec.span + 1) / 2);
@@ -80,47 +95,51 @@ async function boot() {
     // raised layers (e.g. the Azure ribbon) stand proud of the face on both sides
     (spec.layers || []).forEach((l) => slab(l.outline, -D / 2 - l.lift, D + 2 * l.lift, l.edge));
 
-    return { stage, card, cv, renderer, scene, camera, pivot, badge, torch,
+    return { stage, card: stage.closest(".cert"), scene, camera, pivot, badge, torch,
       visible: false, entered: false, spin: -TAU, spinTarget: -TAU, vel: 0, drag: null, moved: 0,
-      tilt: { x: 0, y: 0 }, tiltT: { x: 0, y: 0 }, xOff: 0, halfW: 1, phase: Math.random() * TAU, w: 0, h: 0 };
+      tilt: { x: 0, y: 0 }, tiltT: { x: 0, y: 0 }, phase: Math.random() * TAU, x: 0, y: 0, w: 0, h: 0 };
   }));
   const list = badges.filter(Boolean);
+  if (!list.length) return cv.remove();
 
-  /* ── sizing / quality ── */
+  // compile every shader up front (in parallel where the browser supports it) so the first frame doesn't stall
+  const parallel = renderer.compileAsync && renderer.extensions.has("KHR_parallel_shader_compile");
+  await Promise.all(list.map((b) => (parallel ? renderer.compileAsync(b.scene, b.camera) : renderer.compile(b.scene, b.camera))));
+
+  /* ── layout: one canvas over the grid, one viewport per stage ── */
   const dpr = () => Math.min(devicePixelRatio || 1, [1.25, 1, 1.5, 2][Q.tier]);
-  const resize = (b) => {
-    const r = b.stage.getBoundingClientRect(); if (!r.width || !r.height) return;
-    b.w = r.width; b.h = r.height;
-    b.renderer.setPixelRatio(dpr()); b.renderer.setSize(r.width, r.height, false);
-    b.camera.aspect = r.width / r.height;
-    const halfH = Math.tan((b.camera.fov * Math.PI) / 360) * b.camera.position.z;
-    b.halfW = halfH * b.camera.aspect;
-    b.pivot.scale.setScalar(halfH * 0.8 * Math.min(1, b.halfW / 1.05));
-    b.xOff = 0;
-    b.camera.updateProjectionMatrix();
-    paint(b, 0);
+  let gh = 0;
+  const layout = () => {
+    const g = grid.getBoundingClientRect(); if (!g.width) return;
+    gh = g.height;
+    renderer.setPixelRatio(dpr()); renderer.setSize(g.width, g.height, false);
+    list.forEach((b) => {
+      const r = b.stage.getBoundingClientRect();
+      Object.assign(b, { x: r.left - g.left, y: r.top - g.top, w: r.width, h: r.height });
+      b.camera.aspect = r.width / r.height;
+      const halfH = Math.tan((b.camera.fov * Math.PI) / 360) * b.camera.position.z;
+      b.pivot.scale.setScalar(halfH * 0.8 * Math.min(1, (halfH * b.camera.aspect) / 1.05));
+      b.camera.updateProjectionMatrix();
+    });
+    draw(0);
   };
-  const ro = new ResizeObserver((es) => es.forEach((e) => { const b = list.find((x) => x.stage === e.target); b && resize(b); }));
-  list.forEach((b) => ro.observe(b.stage));
-  Q.on?.(() => list.forEach((b) => resize(b)));
 
   /* ── interaction ── */
   list.forEach((b) => {
     b.card.addEventListener("pointermove", (e) => {
       const r = b.stage.getBoundingClientRect();
-      const cx = r.left + r.width / 2 + (b.xOff / b.halfW) * (r.width / 2);
-      b.tiltT.y = Math.max(-1, Math.min(1, (e.clientX - cx) / (r.width / 2))) * 0.45;
+      b.tiltT.y = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2))) * 0.45;
       b.tiltT.x = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2))) * 0.35;
       // the diver's torch follows the pointer across the badge
       b.torch.position.set(((e.clientX - r.left) / r.width - 0.5) * 5, -((e.clientY - r.top) / r.height - 0.5) * 3, 2.6);
       wake();
     });
     b.card.addEventListener("pointerleave", () => { b.tiltT.x = b.tiltT.y = 0; b.torch.position.set(1.5, 1.2, 3); wake(); });
-    b.cv.addEventListener("pointerdown", (e) => {
+    b.stage.addEventListener("pointerdown", (e) => {
       b.drag = { x: e.clientX, t: performance.now() }; b.moved = 0; b.vel = 0;
-      b.cv.setPointerCapture(e.pointerId); wake();
+      b.stage.setPointerCapture(e.pointerId); wake();
     });
-    b.cv.addEventListener("pointermove", (e) => {
+    b.stage.addEventListener("pointermove", (e) => {
       if (!b.drag) return;
       const now = performance.now(), dx = e.clientX - b.drag.x, dt = Math.max(1, now - b.drag.t);
       const d = (dx / Math.max(160, b.w * 0.5)) * Math.PI;
@@ -128,7 +147,7 @@ async function boot() {
       b.drag.x = e.clientX; b.drag.t = now; wake();
     });
     const end = () => { if (!b.drag) return; b.drag = null; if (!animated()) b.vel = 0; wake(); };
-    b.cv.addEventListener("pointerup", end); b.cv.addEventListener("pointercancel", end);
+    b.stage.addEventListener("pointerup", end); b.stage.addEventListener("pointercancel", end);
     // a spin is not a click: don't follow the verify link after dragging
     b.card.addEventListener("click", (e) => { if (b.moved > 6) { e.preventDefault(); b.moved = 0; } }, true);
   });
@@ -136,7 +155,7 @@ async function boot() {
   /* ── loop: only runs while a badge is on screen and something is moving ── */
   let raf = 0, last = 0, t = 0;
   const animated = () => !reduce && Q.tier > 0;
-  function paint(b, dt) {
+  function step(b, dt) {
     const k = (s) => 1 - Math.exp(-dt * s);
     if (!b.drag) {
       if (Math.abs(b.vel) > 0.0015) { b.spin += b.vel * dt * 60; b.vel *= Math.exp(-dt * 2.2); b.spinTarget = b.spin; }
@@ -144,20 +163,26 @@ async function boot() {
     }
     b.tilt.x += (b.tiltT.x - b.tilt.x) * k(6); b.tilt.y += (b.tiltT.y - b.tilt.y) * k(6);
     const a = animated() ? t + b.phase : 0;
-    b.pivot.position.set(b.xOff, Math.sin(a * 1.1) * 0.05, 0);
+    b.pivot.position.y = Math.sin(a * 1.1) * 0.05;
     b.pivot.rotation.set(b.tilt.x + Math.sin(a * 0.7) * 0.05, b.tilt.y + Math.sin(a * 0.45) * 0.28, Math.sin(a * 0.6) * 0.02);
     b.badge.rotation.y = b.spin;
-    b.renderer.render(b.scene, b.camera);
+  }
+  function draw(dt) {
+    renderer.setScissorTest(false); renderer.clear();
+    renderer.setScissorTest(true);
+    list.forEach((b) => {
+      step(b, dt);
+      const y = gh - b.y - b.h;
+      renderer.setViewport(b.x, y, b.w, b.h); renderer.setScissor(b.x, y, b.w, b.h);
+      renderer.render(b.scene, b.camera);
+    });
   }
   function frame(now) {
     raf = 0;
     const dt = Math.min(0.05, (now - (last || now)) / 1000); last = now; t += dt;
-    let busy = false;
-    list.forEach((b) => {
-      if (!b.visible) return;
-      paint(b, dt);
-      busy ||= animated() || !!b.drag || b.vel !== 0 || Math.abs(b.spinTarget - b.spin) > 0.001 || Math.abs(b.tiltT.x - b.tilt.x) + Math.abs(b.tiltT.y - b.tilt.y) > 0.001;
-    });
+    if (!list.some((b) => b.visible)) { last = 0; return; }
+    draw(dt);
+    const busy = animated() || list.some((b) => b.drag || b.vel !== 0 || Math.abs(b.spinTarget - b.spin) > 0.001 || Math.abs(b.tiltT.x - b.tilt.x) + Math.abs(b.tiltT.y - b.tilt.y) > 0.001);
     if (busy && !document.hidden) raf = requestAnimationFrame(frame); else last = 0;
   }
   function wake() { if (!raf) raf = requestAnimationFrame(frame); }
@@ -170,24 +195,29 @@ async function boot() {
     if (b.visible && !b.entered) { b.entered = true; b.spinTarget = 0; if (!animated()) b.spin = 0; }
     if (b.visible) wake();
   }), { threshold: 0.15 });
-  list.forEach((b) => { io.observe(b.stage); b.stage.classList.add("is-3d"); });
+  list.forEach((b) => io.observe(b.stage));
+
+  new ResizeObserver(layout).observe(grid);
+  Q.on?.(layout);
+  layout();
+  grid.classList.add("is-3d");   // swap the flat images for the live badges
 }
 
-// without WebGL2 (or if three.js fails to load) show the official badge image flat
-function flat() {
-  stages.forEach((s) => {
-    const spec = SPECS[s.dataset.badge]; if (!spec || s.querySelector(".cert__flat")) return;
-    s.querySelectorAll(".cert__gl").forEach((c) => c.remove());
-    const img = new Image(); img.src = spec.img; img.alt = ""; img.className = "cert__flat"; s.appendChild(img);
-  });
-}
-
+/* Start once the page has settled (or right away if the section is already close),
+   so the 3D is usually ready before anyone scrolls down to it. */
 if (stages.length) {
+  let started = false;
   const go = () => {
+    if (started) return; started = true;
     let ok = false;
     try { ok = !!document.createElement("canvas").getContext("webgl2"); } catch (e) {}
-    (ok ? boot() : Promise.resolve(flat())).catch((e) => { console.warn("badges:", e); flat(); });
+    if (ok) boot().catch((e) => { console.warn("badges:", e); grid.classList.remove("is-3d"); grid.querySelector(".cert__gl")?.remove(); });
   };
-  const near = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { near.disconnect(); go(); } }, { rootMargin: "800px 0px" });
+  const near = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) { near.disconnect(); go(); } }, { rootMargin: "1200px 0px" });
   stages.forEach((s) => near.observe(s));
+  const c = navigator.connection;
+  if (!(c && (c.saveData || /2g/.test(c.effectiveType || "")))) {
+    const idle = () => (window.requestIdleCallback ? requestIdleCallback(go, { timeout: 3000 }) : setTimeout(go, 1500));
+    document.readyState === "complete" ? idle() : addEventListener("load", idle, { once: true });
+  }
 }
