@@ -490,7 +490,7 @@ void main(){
     const nf = () => (innerWidth < 640 ? NEOFETCH_M : NEOFETCH);
     const files = {
       "about.txt": "I build AI systems end to end. Data in, models tuned, pipelines deployed, dashboards out.\nWhat I care about most is software people actually trust and use every day.",
-      "practicepot.md": "PracticePot: a SaaS company building a simulated learning platform for accounting and finance.\nMy role: one of the core developers of the product.\n→ <a href='https://practicepot.com' target='_blank' rel='noopener'>practicepot.com</a>",
+      "practicepot.md": "PracticePot: a SaaS company building a simulated learning platform for accounting and finance.\nMy role: one of the core developers of the product. I also built its AI integration, which helps students get familiar with each simulation.\n→ <a href='https://practicepot.com' target='_blank' rel='noopener'>practicepot.com</a>",
       "secrets.env": "<span class='o'>nice try.</span> 🔒",
     };
     const C = {
